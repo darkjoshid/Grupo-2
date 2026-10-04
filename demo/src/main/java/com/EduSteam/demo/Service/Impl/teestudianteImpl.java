@@ -36,4 +36,23 @@ public class teestudianteImpl implements teestudianteService {
 
         return estudianteRepository.save(teestudiante);
     }
+
+    @Override
+    public teestudianteEntity actualizar(teestudianteEntity teestudiante) {
+        teestudianteEntity estudianteExistente = estudianteRepository.findById(teestudiante.getIdestudiante()).orElse(null);
+        if (estudianteExistente != null) {
+            estudianteExistente.setNivelescolar(teestudiante.getNivelescolar());
+            estudianteExistente.setEscuela(teestudiante.getEscuela());
+            estudianteExistente.setEdad(teestudiante.getEdad());
+            return estudianteRepository.save(estudianteExistente);
+        }
+        return null;
+    }
+
+    @Override
+    public void eliminar(Long idestudiante) {
+        estudianteRepository.deleteById(idestudiante);
+    }
+
+
 }

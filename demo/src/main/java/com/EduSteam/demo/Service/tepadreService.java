@@ -7,5 +7,10 @@ import java.util.List;
 public interface tepadreService {
 
     List<tepadreEntity> listar();
+
     tepadreEntity guardar(tepadreEntity tepadre);
+
+    tepadreEntity actualizar(tepadreEntity tepadre);
+
+    void eliminar(Long idpadre);
 }

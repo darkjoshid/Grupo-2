@@ -35,4 +35,16 @@ public class tepadreController {
         return padreService.guardar(tepadre);
     }
 
+    @PutMapping("actualizarpadre")
+    public tepadreEntity actualizar_datos(@RequestBody tepadreEntity tepadre) {
+
+        System.out.println(tepadre);
+        return padreService.actualizar(tepadre);
+    }
+
+    @DeleteMapping("eliminarpadre/{idpadre}")
+    public void eliminar_padre(@PathVariable("idpadre") Long idpadre) {
+
+        padreService.eliminar(idpadre);
+    }
 }

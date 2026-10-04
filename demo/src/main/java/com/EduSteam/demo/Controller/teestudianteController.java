@@ -35,4 +35,17 @@ public class teestudianteController {
         return estudianteService.guardar(teestudiante);
     }
 
+    @PutMapping("actualizarestudiante")
+    public teestudianteEntity actualizar_datos(@RequestBody teestudianteEntity teestudiante) {
+
+        System.out.println(teestudiante);
+        return estudianteService.actualizar(teestudiante);
+    }
+
+    @DeleteMapping("eliminarestudiante/{idestudiante}")
+    public void eliminar_estudiante(@PathVariable("idestudiante") Long idestudiante) {
+
+        estudianteService.eliminar(idestudiante);
+    }
+
 }

@@ -3,6 +3,7 @@ package com.EduSteam.demo.Service.Impl;
 import com.EduSteam.demo.Entity.tepadreEntity;
 import com.EduSteam.demo.Entity.teusuarioEntity;
 import com.EduSteam.demo.Repository.tepadreRepository;
+
 import com.EduSteam.demo.Service.tepadreService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -34,5 +35,22 @@ public class tepadreImpl implements tepadreService {
     public tepadreEntity guardar(tepadreEntity tepadre) {
 
         return padreRepository.save(tepadre);
+    }
+
+    @Override
+    public tepadreEntity actualizar(tepadreEntity tepadre) {
+        tepadreEntity padreExistente = padreRepository.findById(tepadre.getIdpadre()).orElse(null);
+        if (padreExistente != null) {
+            padreExistente.setDireccion(tepadre.getDireccion());
+            padreExistente.setContactoemergencia(tepadre.getContactoemergencia());
+            padreExistente.setRelacionconestudiante(tepadre.getRelacionconestudiante());
+            return padreRepository.save(padreExistente);
+        }
+        return null;
+    }
+
+    @Override
+    public void eliminar(Long idpadre) {
+        padreRepository.deleteById(idpadre);
     }
 }
