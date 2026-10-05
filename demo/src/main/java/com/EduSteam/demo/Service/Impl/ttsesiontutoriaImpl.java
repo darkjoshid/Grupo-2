@@ -1,10 +1,7 @@
 package com.EduSteam.demo.Service.Impl;
 
 import com.EduSteam.demo.Dto.ttsesiontutoriaDto;
-import com.EduSteam.demo.Entity.teestudianteEntity;
-import com.EduSteam.demo.Entity.tetutorEntity;
-import com.EduSteam.demo.Entity.tmasignaturaEntity;
-import com.EduSteam.demo.Entity.ttsesiontutoriaEntity;
+import com.EduSteam.demo.Entity.*;
 import com.EduSteam.demo.Repository.teestudianteRepository;
 import com.EduSteam.demo.Repository.tetutorRepository;
 import com.EduSteam.demo.Repository.tmasignaturaRepository;
@@ -33,9 +30,25 @@ public class ttsesiontutoriaImpl implements ttsesiontutoriaService {
     @Autowired
     private tmasignaturaRepository asignaturaRepository; // Repositorio de asignatura
 
+
     @Override
-    public List<ttsesiontutoriaEntity> listarActivos() {
-        return repository.findByEstado(true);
+    public List<ttsesiontutoriaID> listarActivos() {
+        List<ttsesiontutoriaEntity>sesiones=repository.findByEstado(true);
+        return sesiones.stream().map(sesion ->{
+            ttsesiontutoriaID dto =new ttsesiontutoriaID();
+
+            dto.setIdSesion(sesion.getIdSesion());
+            dto.setIdTutor(sesion.getTutor().getIdtutor());
+            dto.setIdEstudiante(sesion.getEstudiante().getIdestudiante());
+            dto.setIdAsignatura(sesion.getAsignatura().getIdasignatura());
+            dto.setFechaSesion(sesion.getFechaSesion());
+            dto.setHoraInicio(sesion.getHoraInicio());
+            dto.setHoraFin(sesion.getHoraFin());
+            dto.setEstado(sesion.getEstado());
+            dto.setObservaciones(sesion.getObservaciones());
+
+            return dto;
+        }).toList();
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.EduSteam.demo.Controller;
 import com.EduSteam.demo.Dto.ttsesiontutoriaDto;
 import com.EduSteam.demo.Entity.ttsesiontutoriaEntity;
 import com.EduSteam.demo.Service.ttsesiontutoriaService;
+import com.EduSteam.demo.Entity.ttsesiontutoriaID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,9 @@ public class ttsesiontutoriaController {
     private ttsesiontutoriaService sesionService;
 
     @GetMapping
-    public ResponseEntity<List<ttsesiontutoriaEntity>> listarActivos() {
+    public ResponseEntity<List<ttsesiontutoriaID>>listarActivos(){
         return new ResponseEntity<>(sesionService.listarActivos(), HttpStatus.OK);
     }
-
     @PostMapping
     public ResponseEntity<ttsesiontutoriaEntity> registrar(@RequestBody ttsesiontutoriaDto dto) {
         return new ResponseEntity<>(sesionService.registrar(dto), HttpStatus.CREATED);

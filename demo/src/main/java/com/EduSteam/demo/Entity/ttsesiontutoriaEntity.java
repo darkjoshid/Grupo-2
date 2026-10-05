@@ -1,5 +1,6 @@
 package com.EduSteam.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,16 +20,20 @@ public class ttsesiontutoriaEntity {
     @Column(name = "idsesion")
     private Long idSesion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idtutor", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private tetutorEntity tutor;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idestudiante", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private teestudianteEntity estudiante;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idasignatura", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private tmasignaturaEntity asignatura;
 
     @Column(name = "fechasession")
