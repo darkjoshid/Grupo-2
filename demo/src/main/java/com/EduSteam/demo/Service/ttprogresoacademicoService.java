@@ -5,10 +5,9 @@ import com.EduSteam.demo.Entity.ttprogresoacademicoEntity;
 import java.util.List;
 
 public interface ttprogresoacademicoService {
-    List<ttprogresoacademicoEntity> listarActivos();
-    List<ttprogresoacademicoEntity> listarPorIdEstudiante(Long idEstudiante);
-    ttprogresoacademicoEntity buscarPorId(Long id);
-    ttprogresoacademicoEntity registrar(ttprogresoacademicoEntity progreso);
+    List<ttprogresoacademicoEntity> listar();
+    ttprogresoacademicoEntity obtenerPorId(Long id);
+    ttprogresoacademicoEntity guardar(ttprogresoacademicoEntity progreso);
     ttprogresoacademicoEntity actualizar(Long id, ttprogresoacademicoEntity progreso);
-    void eliminarLogico(Long id);
+    void eliminar(Long id);
 }
