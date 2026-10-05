@@ -25,7 +25,7 @@ public class tmasignaturaEntity {
     private Integer nivel;
 
     @Column(name = "estadoasignatura")
-    private Boolean estadoAsignatura;
+    private Boolean estadoAsignatura = true;
 
     public Long getIdasignatura() {
         return idasignatura;

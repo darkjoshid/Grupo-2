@@ -1,3 +1,4 @@
+
 package com.EduSteam.demo.Service.Impl;
 
 import com.EduSteam.demo.Dto.tmasignaturaDto;
@@ -27,7 +28,7 @@ public class tmasignaturaImpl implements tmasignaturaService{
     @Override
     @Transactional(readOnly = true)
     public List<tmasignaturaDto> listar() {
-        return asignaturaRepository.findAll().stream()
+        return asignaturaRepository.listarActivas().stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
@@ -48,9 +49,7 @@ public class tmasignaturaImpl implements tmasignaturaService{
         tmasignaturaEntity asignatura = new tmasignaturaEntity();
         asignatura.setTutor(buscarTutor(dto.getIdtutor()));
         copiarCampos(dto, asignatura);
-        if (asignatura.getEstadoAsignatura() == null) {
-            asignatura.setEstadoAsignatura(true);
-        }
+        asignatura.setEstadoAsignatura(true);
         return toDto(asignaturaRepository.save(asignatura));
     }
 
@@ -73,14 +72,15 @@ public class tmasignaturaImpl implements tmasignaturaService{
         asignatura.setEstadoAsignatura(false);
         asignaturaRepository.save(asignatura);
     }
+
     private tmasignaturaEntity buscar(Long id) {
-        return asignaturaRepository.findById(id)
+        return asignaturaRepository.buscarActivaPorId(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "No existe la asignatura con id " + id));
     }
 
     private tetutorEntity buscarTutor(Long idtutor) {
-        return tutorRepository.findById(idtutor)
+        return tutorRepository.buscarActivoPorId(idtutor)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "No existe el tutor con id " + idtutor));
     }
@@ -89,9 +89,7 @@ public class tmasignaturaImpl implements tmasignaturaService{
         asignatura.setNombre(dto.getNombre());
         asignatura.setDescripcion(dto.getDescripcion());
         asignatura.setNivel(dto.getNivel());
-        if (dto.getEstadoAsignatura() != null) {
-            asignatura.setEstadoAsignatura(dto.getEstadoAsignatura());
-        }
+        // El estado no se modifica aquí: solo cambia con guardar (activa) o eliminar (baja lógica)
     }
 
     private tmasignaturaDto toDto(tmasignaturaEntity asignatura) {

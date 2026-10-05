@@ -41,7 +41,7 @@ public class tetutorController {
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Actualizar un tutor", description = "El idusuario enviado en el cuerpo se ignora: un tutor no cambia de usuario")
+    @Operation(summary = "Actualizar un tutor", description = "Si se envía idusuario, el tutor pasa a ese usuario (debe existir y no ser tutor de otro registro)")
     public tetutorDto actualizar(@PathVariable Long id, @Valid @RequestBody tetutorDto dto) {
         return tutorService.actualizar(id, dto);
     }
