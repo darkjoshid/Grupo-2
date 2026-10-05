@@ -1,52 +1,38 @@
 package com.EduSteam.demo.Controller;
 
-
+import com.EduSteam.demo.Dto.ttsesiontutoriaDto;
 import com.EduSteam.demo.Entity.ttsesiontutoriaEntity;
 import com.EduSteam.demo.Service.ttsesiontutoriaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/sesionestutoria")
+@Tag(name = "Controlador de Sesiones de Tutoría", description = "Permite registrar, listar, consultar, actualizar y dar de baja sesiones de tutoría")
 public class ttsesiontutoriaController {
 
     @Autowired
-    private ttsesiontutoriaService sesionTutoriaService;
+    private ttsesiontutoriaService sesionService;
 
     @GetMapping
-    public List<ttsesiontutoriaEntity> listarActivas() {
-        return sesionTutoriaService.listarActivas();
-    }
-
-    @GetMapping("/{id}")
-    public ttsesiontutoriaEntity obtenerPorId(@PathVariable Long id) {
-        return sesionTutoriaService.buscarPorId(id);
-    }
-
-    @GetMapping("/estudiante/{idEstudiante}")
-    public List<ttsesiontutoriaEntity> listarPorEstudiante(@PathVariable Long idEstudiante) {
-        return sesionTutoriaService.listarPorIdEstudiante(idEstudiante);
-    }
-
-    @GetMapping("/tutor/{idTutor}")
-    public List<ttsesiontutoriaEntity> listarPorTutor(@PathVariable Long idTutor) {
-        return sesionTutoriaService.listarPorIdTutor(idTutor);
+    public ResponseEntity<List<ttsesiontutoriaEntity>> listarActivos() {
+        return new ResponseEntity<>(sesionService.listarActivos(), HttpStatus.OK);
     }
 
     @PostMapping
-    public ttsesiontutoriaEntity registrar(@RequestBody ttsesiontutoriaEntity sesion) {
-        return sesionTutoriaService.registrar(sesion);
-    }
-
-    @PutMapping("/{id}")
-    public ttsesiontutoriaEntity actualizar(@PathVariable Long id, @RequestBody ttsesiontutoriaEntity sesion) {
-        return sesionTutoriaService.actualizar(id, sesion);
+    public ResponseEntity<ttsesiontutoriaEntity> registrar(@RequestBody ttsesiontutoriaDto dto) {
+        return new ResponseEntity<>(sesionService.registrar(dto), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public void eliminarLogico(@PathVariable Long id) {
-        sesionTutoriaService.eliminarLogico(id);
+    public ResponseEntity<Void> eliminarLogico(@PathVariable Long id) {
+        sesionService.eliminarLogico(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

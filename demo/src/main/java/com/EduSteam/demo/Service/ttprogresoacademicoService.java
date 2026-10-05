@@ -1,14 +1,12 @@
 package com.EduSteam.demo.Service;
 
+import com.EduSteam.demo.Dto.ttprogresoacademicoDto;
 import com.EduSteam.demo.Entity.ttprogresoacademicoEntity;
 
 import java.util.List;
 
 public interface ttprogresoacademicoService {
     List<ttprogresoacademicoEntity> listarActivos();
-    List<ttprogresoacademicoEntity> listarPorIdEstudiante(Long idEstudiante);
-    ttprogresoacademicoEntity buscarPorId(Long id);
-    ttprogresoacademicoEntity registrar(ttprogresoacademicoEntity progreso);
-    ttprogresoacademicoEntity actualizar(Long id, ttprogresoacademicoEntity progreso);
+    ttprogresoacademicoEntity registrar(ttprogresoacademicoDto dto);
     void eliminarLogico(Long id);
 }

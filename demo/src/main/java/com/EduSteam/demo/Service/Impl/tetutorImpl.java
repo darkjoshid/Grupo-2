@@ -2,8 +2,10 @@ package com.EduSteam.demo.Service.Impl;
 
 import com.EduSteam.demo.Dto.tetutorDto;
 import com.EduSteam.demo.Entity.tetutorEntity;
+import com.EduSteam.demo.Entity.tmasignaturaEntity;
 import com.EduSteam.demo.Entity.teusuarioEntity;
 import com.EduSteam.demo.Repository.tetutorRepository;
+import com.EduSteam.demo.Repository.tmasignaturaRepository;
 import com.EduSteam.demo.Repository.teusuarioRepository;
 import com.EduSteam.demo.Service.tetutorService;
 import org.springframework.http.HttpStatus;
@@ -18,16 +20,19 @@ import java.util.stream.Collectors;
 public class tetutorImpl implements tetutorService {
     private final tetutorRepository tutorRepository;
     private final teusuarioRepository usuarioRepository;
+    private final tmasignaturaRepository asignaturaRepository;
 
-    public tetutorImpl(tetutorRepository tutorRepository, teusuarioRepository usuarioRepository) {
+    public tetutorImpl(tetutorRepository tutorRepository, teusuarioRepository usuarioRepository,
+                       tmasignaturaRepository asignaturaRepository) {
         this.tutorRepository = tutorRepository;
         this.usuarioRepository = usuarioRepository;
+        this.asignaturaRepository = asignaturaRepository;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<tetutorDto> listar() {
-        return tutorRepository.findAll().stream()
+        return tutorRepository.listarActivos().stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
@@ -51,15 +56,13 @@ public class tetutorImpl implements tetutorService {
 
         if (tutorRepository.existsByUsuario_Idusuario(dto.getIdusuario())) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "El usuario con id " + dto.getIdusuario() + " ya está registrado como tutor");
+                    HttpStatus.CONFLICT, "El usuario con id " + dto.getIdusuario() + " ya está registrado como tutor (activo o dado de baja)");
         }
 
         tetutorEntity tutor = new tetutorEntity();
         tutor.setUsuario(usuario);
         copiarCampos(dto, tutor);
-        if (tutor.getEstadoTutor() == null) {
-            tutor.setEstadoTutor(true);
-        }
+        tutor.setEstadoTutor(true);
         return toDto(tutorRepository.save(tutor));
     }
 
@@ -67,6 +70,21 @@ public class tetutorImpl implements tetutorService {
     @Transactional
     public tetutorDto actualizar(Long id, tetutorDto dto) {
         tetutorEntity tutor = buscar(id);
+
+        // Si se envía un idusuario distinto al actual, el tutor pasa a ese usuario
+        Long idusuarioActual = tutor.getUsuario() != null ? tutor.getUsuario().getIdusuario() : null;
+        if (dto.getIdusuario() != null && !dto.getIdusuario().equals(idusuarioActual)) {
+            teusuarioEntity usuario = usuarioRepository.findById(dto.getIdusuario())
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "No existe el usuario con id " + dto.getIdusuario()));
+
+            if (tutorRepository.existsByUsuario_Idusuario(dto.getIdusuario())) {
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT, "El usuario con id " + dto.getIdusuario() + " ya está registrado como tutor (activo o dado de baja)");
+            }
+            tutor.setUsuario(usuario);
+        }
+
         copiarCampos(dto, tutor);
         return toDto(tutorRepository.save(tutor));
     }
@@ -77,10 +95,16 @@ public class tetutorImpl implements tetutorService {
         tetutorEntity tutor = buscar(id);
         tutor.setEstadoTutor(false);
         tutorRepository.save(tutor);
+
+        // Al dar de baja al tutor, también se dan de baja sus asignaturas activas
+        for (tmasignaturaEntity asignatura : asignaturaRepository.listarActivasPorTutor(id)) {
+            asignatura.setEstadoAsignatura(false);
+            asignaturaRepository.save(asignatura);
+        }
     }
 
     private tetutorEntity buscar(Long id) {
-        return tutorRepository.findById(id)
+        return tutorRepository.buscarActivoPorId(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "No existe el tutor con id " + id));
     }
@@ -89,9 +113,7 @@ public class tetutorImpl implements tetutorService {
         tutor.setBiografia(dto.getBiografia());
         tutor.setAnosExperiencia(dto.getAnosExperiencia());
         tutor.setCalificacion(dto.getCalificacion());
-        if (dto.getEstadoTutor() != null) {
-            tutor.setEstadoTutor(dto.getEstadoTutor());
-        }
+        // El estado no se modifica aquí: solo cambia con guardar (activo) o eliminar (baja lógica)
     }
 
     private tetutorDto toDto(tetutorEntity tutor) {

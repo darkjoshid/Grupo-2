@@ -19,10 +19,6 @@ public class teusuarioImpl implements teusuarioService {
     @Autowired
     private teusuarioRepository uarioRepository;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-
     @Override
     public List<teusuarioEntity> listar() {
         List<teusuarioEntity> listar = new ArrayList<>();
@@ -36,5 +32,22 @@ public class teusuarioImpl implements teusuarioService {
         return uarioRepository.save(teusuario);
 
     }
+
+    @Override
+    public teusuarioEntity listId(long id) {
+        return uarioRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void delete(long id) {
+        uarioRepository.deleteById(id);
+    }
+
+    @Override
+    public void update(teusuarioEntity teusuario) {
+        uarioRepository.save(teusuario);
+    }
+
+
 }
 

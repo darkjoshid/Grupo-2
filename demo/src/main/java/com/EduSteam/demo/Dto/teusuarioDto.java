@@ -9,7 +9,7 @@ import jakarta.persistence.ManyToOne;
 public class teusuarioDto {
 
 
-    private Long idusuario;
+    private Integer idusuario;
 
     private String nombreusuario;
 
@@ -70,7 +70,7 @@ public class teusuarioDto {
         this.idrolRol = idrolRol;
     }
 
-    public Long getIdusuario() {
+    public Integer getIdusuario() {
         return idusuario;
     }
 

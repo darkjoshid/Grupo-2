@@ -40,4 +40,22 @@ public class tmrolImpl implements tmrolService {
 
         return rolRepository.save(tmrol);
     }
+
+    @Override
+    public tmrolEntity listarId(Integer id) {
+        return rolRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        rolRepository.deleteById(id);
+
+
+    }
+
+    @Override
+    public void update(tmrolEntity tmrolentity) {
+
+        rolRepository.save(tmrolentity);
+    }
 }
