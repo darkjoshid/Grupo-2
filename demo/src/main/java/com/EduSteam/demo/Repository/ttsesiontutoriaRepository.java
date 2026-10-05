@@ -12,9 +12,5 @@ import java.util.Optional;
 @Repository
 public interface ttsesiontutoriaRepository extends JpaRepository<ttsesiontutoriaEntity, Long> {
 
-    @Query("SELECT s FROM ttsesiontutoriaEntity s WHERE s.estado = true")
-    List<ttsesiontutoriaEntity> listaSesionesActivas();
-
-    @Query("SELECT s FROM ttsesiontutoriaEntity s WHERE s.idSesionTutoria = :id AND s.estado = true")
-    Optional<ttsesiontutoriaEntity> buscarPorIdActivo(@Param("id") Long id);
+    List<ttsesiontutoriaEntity> findByEstado(Boolean estado);
 }

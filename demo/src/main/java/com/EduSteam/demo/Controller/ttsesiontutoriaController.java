@@ -16,37 +16,21 @@ import java.util.List;
 public class ttsesiontutoriaController {
 
     @Autowired
-    private ttsesiontutoriaService service;
+    private ttsesiontutoriaService sesionService;
 
     @GetMapping
-    @Operation(summary = "Listar todas las sesiones de tutoría activas")
-    public List<ttsesiontutoriaEntity> listarActivas() {
-        return service.listarActivas();
-    }
-
-    @GetMapping("/{id}")
-    @Operation(summary = "Obtener una sesión de tutoría por su id")
-    public ttsesiontutoriaEntity obtenerPorId(@PathVariable Long id) {
-        return service.obtenerPorId(id);
+    public ResponseEntity<List<ttsesiontutoriaEntity>> listarActivos() {
+        return new ResponseEntity<>(sesionService.listarActivos(), HttpStatus.OK);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Registrar una nueva sesión de tutoría")
-    public ttsesiontutoriaEntity registrar(@RequestBody ttsesiontutoriaEntity sesion) {
-        return service.registrar(sesion);
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "Actualizar una sesión de tutoría existente")
-    public ttsesiontutoriaEntity actualizar(@PathVariable Long id, @RequestBody ttsesiontutoriaEntity sesion) {
-        return service.actualizar(id, sesion);
+    public ResponseEntity<ttsesiontutoriaEntity> registrar(@RequestBody ttsesiontutoriaDto dto) {
+        return new ResponseEntity<>(sesionService.registrar(dto), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Dar de baja lógicamente a una sesión de tutoría")
-    public void eliminarLogico(@PathVariable Long id) {
-        service.eliminarLogico(id);
+    public ResponseEntity<Void> eliminarLogico(@PathVariable Long id) {
+        sesionService.eliminarLogico(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

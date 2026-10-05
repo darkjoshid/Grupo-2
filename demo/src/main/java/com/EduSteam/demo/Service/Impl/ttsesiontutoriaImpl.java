@@ -19,73 +19,50 @@ public class ttsesiontutoriaImpl implements ttsesiontutoriaService {
     @Autowired
     private ttsesiontutoriaRepository repository;
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private tetutorRepository tutorRepository; // Asegúrate de que coincida con el nombre de tu repositorio de tutor
+
+    @Autowired
+    private teestudianteRepository estudianteRepository; // Repositorio de estudiante
+
+    @Autowired
+    private tmasignaturaRepository asignaturaRepository; // Repositorio de asignatura
 
     @Override
-    public List<ttsesiontutoriaEntity> listarActivas() {
-        return repository.listaSesionesActivas();
+    public List<ttsesiontutoriaEntity> listarActivos() {
+        return repository.findByEstado(true);
     }
 
     @Override
-    public ttsesiontutoriaEntity obtenerPorId(Long id) {
-        return repository.buscarPorIdActivo(id).orElse(null);
-    }
+    @Transactional
+    public ttsesiontutoriaEntity registrar(ttsesiontutoriaDto dto) {
+        tetutorEntity tutor = tutorRepository.findById(dto.getIdTutor()).orElse(null);
+        teestudianteEntity estudiante = estudianteRepository.findById(dto.getIdEstudiante()).orElse(null);
+        tmasignaturaEntity asignatura = asignaturaRepository.findById(dto.getIdAsignatura()).orElse(null);
 
-    @Override
-    public ttsesiontutoriaEntity registrar(ttsesiontutoriaEntity sesion) {
-        // Carga segura del estudiante por ID
-        if (sesion.getEstudiante() != null && sesion.getEstudiante().getIdestudiante() != null) {
-            teestudianteEntity estudiante = entityManager.find(teestudianteEntity.class, sesion.getEstudiante().getIdestudiante());
-            sesion.setEstudiante(estudiante);
-        }
-        // Carga segura del tutor por ID
-        if (sesion.getTutor() != null && sesion.getTutor().getIdtutor() != null) {
-            tetutorEntity tutor = entityManager.find(tetutorEntity.class, sesion.getTutor().getIdtutor());
-            sesion.setTutor(tutor);
-        }
-        // Carga segura de la asignatura por ID
-        if (sesion.getAsignatura() != null && sesion.getAsignatura().getIdasignatura() != null) {
-            tmasignaturaEntity asignatura = entityManager.find(tmasignaturaEntity.class, sesion.getAsignatura().getIdasignatura());
-            sesion.setAsignatura(asignatura);
+        if (tutor == null || estudiante == null || asignatura == null) {
+            throw new RuntimeException("Tutor, Estudiante o Asignatura no encontrados en la base de datos.");
         }
 
-        sesion.setEstado(true);
+        ttsesiontutoriaEntity sesion = new ttsesiontutoriaEntity();
+        sesion.setTutor(tutor);
+        sesion.setEstudiante(estudiante);
+        sesion.setAsignatura(asignatura);
+        sesion.setFechaSesion(dto.getFechaSesion());
+        sesion.setHoraInicio(dto.getHoraInicio());
+        sesion.setHoraFin(dto.getHoraFin());
+        sesion.setObservaciones(dto.getObservaciones());
+        sesion.setEstado(true); // Activo por defecto
+
         return repository.save(sesion);
     }
 
     @Override
-    public ttsesiontutoriaEntity actualizar(Long id, ttsesiontutoriaEntity sesion) {
-        ttsesiontutoriaEntity existente = repository.buscarPorIdActivo(id).orElse(null);
-        if (existente != null) {
-            existente.setFechaSesion(sesion.getFechaSesion());
-            existente.setHoraInicio(sesion.getHoraInicio());
-            existente.setHoraFin(sesion.getHoraFin());
-            existente.setObservaciones(sesion.getObservaciones());
-
-            if (sesion.getAsignatura() != null && sesion.getAsignatura().getIdasignatura() != null) {
-                tmasignaturaEntity asignatura = entityManager.find(tmasignaturaEntity.class, sesion.getAsignatura().getIdasignatura());
-                existente.setAsignatura(asignatura);
-            }
-            if (sesion.getTutor() != null && sesion.getTutor().getIdtutor() != null) {
-                tetutorEntity tutor = entityManager.find(tetutorEntity.class, sesion.getTutor().getIdtutor());
-                existente.setTutor(tutor);
-            }
-            if (sesion.getEstudiante() != null && sesion.getEstudiante().getIdestudiante() != null) {
-                teestudianteEntity estudiante = entityManager.find(teestudianteEntity.class, sesion.getEstudiante().getIdestudiante());
-                existente.setEstudiante(estudiante);
-            }
-
-            return repository.save(existente);
-        }
-        return null;
-    }
-
-    @Override
+    @Transactional
     public void eliminarLogico(Long id) {
-        ttsesiontutoriaEntity sesion = repository.buscarPorIdActivo(id).orElse(null);
+        ttsesiontutoriaEntity sesion = repository.findById(id).orElse(null);
         if (sesion != null) {
-            sesion.setEstado(false);
+            sesion.setEstado(false); // Eliminación lógica
             repository.save(sesion);
         }
     }

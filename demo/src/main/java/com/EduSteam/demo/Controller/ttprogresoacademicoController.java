@@ -16,37 +16,21 @@ import java.util.List;
 public class ttprogresoacademicoController {
 
     @Autowired
-    private ttprogresoacademicoService service;
+    private ttprogresoacademicoService progresoService;
 
     @GetMapping
-    @Operation(summary = "Listar todos los progresos académicos")
-    public List<ttprogresoacademicoEntity> listar() {
-        return service.listar();
-    }
-
-    @GetMapping("/{id}")
-    @Operation(summary = "Obtener un progreso académico por su id")
-    public ttprogresoacademicoEntity obtenerPorId(@PathVariable Long id) {
-        return service.obtenerPorId(id);
+    public ResponseEntity<List<ttprogresoacademicoEntity>> listarActivos() {
+        return new ResponseEntity<>(progresoService.listarActivos(), HttpStatus.OK);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Guardar un nuevo progreso académico")
-    public ttprogresoacademicoEntity guardar(@RequestBody ttprogresoacademicoEntity progreso) {
-        return service.guardar(progreso);
-    }
-
-    @PutMapping("/{id}")
-    @Operation(summary = "Actualizar un progreso académico existente")
-    public ttprogresoacademicoEntity actualizar(@PathVariable Long id, @RequestBody ttprogresoacademicoEntity progreso) {
-        return service.actualizar(id, progreso);
+    public ResponseEntity<ttprogresoacademicoEntity> registrar(@RequestBody ttprogresoacademicoDto dto) {
+        return new ResponseEntity<>(progresoService.registrar(dto), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Eliminar un progreso académico")
-    public void eliminar(@PathVariable Long id) {
-        service.eliminar(id);
+    public ResponseEntity<Void> eliminarLogico(@PathVariable Long id) {
+        progresoService.eliminarLogico(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
