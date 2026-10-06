@@ -2,6 +2,7 @@ package com.EduSteam.demo.Controller;
 
 import com.EduSteam.demo.Dto.ttprogresoacademicoDto;
 import com.EduSteam.demo.Entity.ttprogresoacademicoEntity;
+import com.EduSteam.demo.Entity.ttprogresoacademicoID;
 import com.EduSteam.demo.Service.ttprogresoacademicoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,12 +22,12 @@ public class ttprogresoacademicoController {
     private ttprogresoacademicoService progresoService;
 
     @GetMapping
-    public ResponseEntity<List<ttprogresoacademicoEntity>> listarActivos() {
+    public ResponseEntity<List<ttprogresoacademicoID>> listarActivos() {
         return new ResponseEntity<>(progresoService.listarActivos(), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<ttprogresoacademicoEntity> registrar(@RequestBody ttprogresoacademicoDto dto) {
+    public ResponseEntity<ttprogresoacademicoID> registrar(@RequestBody ttprogresoacademicoDto dto) {
         return new ResponseEntity<>(progresoService.registrar(dto), HttpStatus.CREATED);
     }
 

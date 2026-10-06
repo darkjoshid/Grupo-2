@@ -4,6 +4,7 @@ import com.EduSteam.demo.Dto.ttprogresoacademicoDto;
 import com.EduSteam.demo.Entity.teestudianteEntity;
 import com.EduSteam.demo.Entity.tmasignaturaEntity;
 import com.EduSteam.demo.Entity.ttprogresoacademicoEntity;
+import com.EduSteam.demo.Entity.ttprogresoacademicoID;
 import com.EduSteam.demo.Repository.teestudianteRepository;
 import com.EduSteam.demo.Repository.tmasignaturaRepository;
 import com.EduSteam.demo.Repository.ttprogresoacademicoRepository;
@@ -28,14 +29,26 @@ public class ttprogresoacademicoImpl implements ttprogresoacademicoService {
     @Autowired
     private tmasignaturaRepository asignaturaRepository;
 
+
     @Override
-    public List<ttprogresoacademicoEntity> listarActivos() {
-        return repository.findByEstadoProgreso(true);
+    public List<ttprogresoacademicoID> listarActivos() {
+        List<ttprogresoacademicoEntity>lista=repository.findByEstadoProgreso(true);
+        return lista.stream().map(progreso->{
+            ttprogresoacademicoID dto=new ttprogresoacademicoID();
+
+            dto.setIdProgreso(progreso.getIdProgreso());
+            dto.setIdEstudiante(progreso.getEstudiante().getIdestudiante());
+            dto.setIdAsignatura(progreso.getAsignatura().getIdasignatura());
+            dto.setCalificacion(progreso.getCalificacion());
+            dto.setNotasProgreso(progreso.getNotasProgreso());
+            dto.setEstadoProgreso(progreso.getEstadoProgreso());
+            return dto;
+        }).toList();
     }
 
     @Override
     @Transactional
-    public ttprogresoacademicoEntity registrar(ttprogresoacademicoDto dto) {
+    public ttprogresoacademicoID registrar(ttprogresoacademicoDto dto) {
         teestudianteEntity estudiante = estudianteRepository.findById(dto.getIdEstudiante()).orElse(null);
         tmasignaturaEntity asignatura = asignaturaRepository.findById(dto.getIdAsignatura()).orElse(null);
 
@@ -48,9 +61,17 @@ public class ttprogresoacademicoImpl implements ttprogresoacademicoService {
         progreso.setAsignatura(asignatura);
         progreso.setCalificacion(dto.getCalificacion());
         progreso.setNotasProgreso(dto.getNotasProgreso());
-        progreso.setEstadoProgreso(true); // Activo por defecto
+        progreso.setEstadoProgreso(true);
 
-        return repository.save(progreso);
+        ttprogresoacademicoEntity guardado=repository.save(progreso);
+        ttprogresoacademicoID respuesta=new ttprogresoacademicoID();
+        respuesta.setIdProgreso(guardado.getIdProgreso());
+        respuesta.setIdEstudiante(guardado.getEstudiante().getIdestudiante());
+        respuesta.setIdAsignatura(guardado.getAsignatura().getIdasignatura());
+        respuesta.setCalificacion(guardado.getCalificacion());
+        respuesta.setNotasProgreso(guardado.getNotasProgreso());
+        respuesta.setEstadoProgreso(guardado.getEstadoProgreso());
+        return respuesta;
     }
 
     @Override
@@ -58,7 +79,7 @@ public class ttprogresoacademicoImpl implements ttprogresoacademicoService {
     public void eliminarLogico(Long id) {
         ttprogresoacademicoEntity progreso = repository.findById(id).orElse(null);
         if (progreso != null) {
-            progreso.setEstadoProgreso(false); // Eliminación lógica
+            progreso.setEstadoProgreso(false);
             repository.save(progreso);
         }
     }
