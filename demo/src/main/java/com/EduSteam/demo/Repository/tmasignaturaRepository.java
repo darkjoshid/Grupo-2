@@ -12,7 +12,6 @@ import java.util.Optional;
 @Repository
 public interface tmasignaturaRepository extends JpaRepository<tmasignaturaEntity, Long> {
 
-    // Solo asignaturas activas (eliminación lógica: estadoAsignatura = true)
     @Query("SELECT a FROM tmasignaturaEntity a WHERE a.estadoAsignatura = true")
     List<tmasignaturaEntity> listarActivas();
 

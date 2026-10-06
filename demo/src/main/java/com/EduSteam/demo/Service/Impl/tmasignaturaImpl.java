@@ -26,7 +26,6 @@ public class tmasignaturaImpl implements tmasignaturaService{
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<tmasignaturaDto> listar() {
         return asignaturaRepository.listarActivas().stream()
                 .map(this::toDto)
@@ -34,13 +33,11 @@ public class tmasignaturaImpl implements tmasignaturaService{
     }
 
     @Override
-    @Transactional(readOnly = true)
     public tmasignaturaDto obtenerPorId(Long id) {
         return toDto(buscar(id));
     }
 
     @Override
-    @Transactional
     public tmasignaturaDto guardar(tmasignaturaDto dto) {
         if (dto.getIdtutor() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El idtutor es obligatorio");
@@ -54,10 +51,8 @@ public class tmasignaturaImpl implements tmasignaturaService{
     }
 
     @Override
-    @Transactional
     public tmasignaturaDto actualizar(Long id, tmasignaturaDto dto) {
         tmasignaturaEntity asignatura = buscar(id);
-        // Si se envía un idtutor, la asignatura pasa a ese tutor
         if (dto.getIdtutor() != null) {
             asignatura.setTutor(buscarTutor(dto.getIdtutor()));
         }
@@ -66,7 +61,6 @@ public class tmasignaturaImpl implements tmasignaturaService{
     }
 
     @Override
-    @Transactional
     public void eliminar(Long id) {
         tmasignaturaEntity asignatura = buscar(id);
         asignatura.setEstadoAsignatura(false);
@@ -89,7 +83,6 @@ public class tmasignaturaImpl implements tmasignaturaService{
         asignatura.setNombre(dto.getNombre());
         asignatura.setDescripcion(dto.getDescripcion());
         asignatura.setNivel(dto.getNivel());
-        // El estado no se modifica aquí: solo cambia con guardar (activa) o eliminar (baja lógica)
     }
 
     private tmasignaturaDto toDto(tmasignaturaEntity asignatura) {

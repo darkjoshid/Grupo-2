@@ -30,7 +30,6 @@ public class tetutorImpl implements tetutorService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<tetutorDto> listar() {
         return tutorRepository.listarActivos().stream()
                 .map(this::toDto)
@@ -38,13 +37,11 @@ public class tetutorImpl implements tetutorService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public tetutorDto obtenerPorId(Long id) {
         return toDto(buscar(id));
     }
 
     @Override
-    @Transactional
     public tetutorDto guardar(tetutorDto dto) {
         if (dto.getIdusuario() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El idusuario es obligatorio");
@@ -67,7 +64,6 @@ public class tetutorImpl implements tetutorService {
     }
 
     @Override
-    @Transactional
     public tetutorDto actualizar(Long id, tetutorDto dto) {
         tetutorEntity tutor = buscar(id);
 
@@ -90,7 +86,6 @@ public class tetutorImpl implements tetutorService {
     }
 
     @Override
-    @Transactional
     public void eliminar(Long id) {
         tetutorEntity tutor = buscar(id);
         tutor.setEstadoTutor(false);
