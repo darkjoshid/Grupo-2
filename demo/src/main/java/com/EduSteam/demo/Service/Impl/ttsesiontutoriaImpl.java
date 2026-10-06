@@ -22,13 +22,13 @@ public class ttsesiontutoriaImpl implements ttsesiontutoriaService {
     private ttsesiontutoriaRepository repository;
 
     @Autowired
-    private tetutorRepository tutorRepository; // Asegúrate de que coincida con el nombre de tu repositorio de tutor
+    private tetutorRepository tutorRepository;
 
     @Autowired
-    private teestudianteRepository estudianteRepository; // Repositorio de estudiante
+    private teestudianteRepository estudianteRepository;
 
     @Autowired
-    private tmasignaturaRepository asignaturaRepository; // Repositorio de asignatura
+    private tmasignaturaRepository asignaturaRepository;
 
 
     @Override
@@ -52,7 +52,6 @@ public class ttsesiontutoriaImpl implements ttsesiontutoriaService {
     }
 
     @Override
-    @Transactional
     public ttsesiontutoriaEntity registrar(ttsesiontutoriaDto dto) {
         tetutorEntity tutor = tutorRepository.findById(dto.getIdTutor()).orElse(null);
         teestudianteEntity estudiante = estudianteRepository.findById(dto.getIdEstudiante()).orElse(null);
@@ -70,17 +69,16 @@ public class ttsesiontutoriaImpl implements ttsesiontutoriaService {
         sesion.setHoraInicio(dto.getHoraInicio());
         sesion.setHoraFin(dto.getHoraFin());
         sesion.setObservaciones(dto.getObservaciones());
-        sesion.setEstado(true); // Activo por defecto
+        sesion.setEstado(true);
 
         return repository.save(sesion);
     }
 
     @Override
-    @Transactional
     public void eliminarLogico(Long id) {
         ttsesiontutoriaEntity sesion = repository.findById(id).orElse(null);
         if (sesion != null) {
-            sesion.setEstado(false); // Eliminación lógica
+            sesion.setEstado(false);
             repository.save(sesion);
         }
     }

@@ -47,7 +47,6 @@ public class ttprogresoacademicoImpl implements ttprogresoacademicoService {
     }
 
     @Override
-    @Transactional
     public ttprogresoacademicoID registrar(ttprogresoacademicoDto dto) {
         teestudianteEntity estudiante = estudianteRepository.findById(dto.getIdEstudiante()).orElse(null);
         tmasignaturaEntity asignatura = asignaturaRepository.findById(dto.getIdAsignatura()).orElse(null);
@@ -75,7 +74,6 @@ public class ttprogresoacademicoImpl implements ttprogresoacademicoService {
     }
 
     @Override
-    @Transactional
     public void eliminarLogico(Long id) {
         ttprogresoacademicoEntity progreso = repository.findById(id).orElse(null);
         if (progreso != null) {
