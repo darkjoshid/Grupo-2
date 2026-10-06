@@ -25,7 +25,7 @@ public class tetutorEntity {
     private Integer calificacion;
 
     @Column(name = "estadotutor")
-    private Boolean estadoTutor = true;
+    private Boolean estadoTutor;
 
     public Long getIdtutor() {
         return idtutor;

@@ -11,7 +11,7 @@ public class tmasignaturaEntity {
     @Column(name = "idasignatura")
     private Long idasignatura;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "idtutor", nullable = false)
     private tetutorEntity tutor;
 
@@ -25,7 +25,7 @@ public class tmasignaturaEntity {
     private Integer nivel;
 
     @Column(name = "estadoasignatura")
-    private Boolean estadoAsignatura = true;
+    private Boolean estadoAsignatura;
 
     public Long getIdasignatura() {
         return idasignatura;

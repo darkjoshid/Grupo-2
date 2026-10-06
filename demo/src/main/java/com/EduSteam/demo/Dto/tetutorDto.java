@@ -1,21 +1,12 @@
 package com.EduSteam.demo.Dto;
 
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
 public class tetutorDto {
+
     private Long idtutor;
-
     private Long idusuario;
-
-    @Size(max = 1000, message = "La biografía no puede superar los 1000 caracteres")
     private String biografia;
-
-    @PositiveOrZero(message = "Los años de experiencia no pueden ser negativos")
     private Integer anosExperiencia;
-
-    @PositiveOrZero(message = "La calificación no puede ser negativa")
     private Integer calificacion;
-
     private Boolean estadoTutor;
 
     public Long getIdtutor() {
