@@ -1,17 +1,8 @@
 package com.EduSteam.demo.Service.Impl;
 
-import com.EduSteam.demo.Dto.ttprogresoacademicoDto;
-import com.EduSteam.demo.Entity.teestudianteEntity;
-import com.EduSteam.demo.Entity.tmasignaturaEntity;
 import com.EduSteam.demo.Entity.ttprogresoacademicoEntity;
-import com.EduSteam.demo.Entity.ttprogresoacademicoID;
-import com.EduSteam.demo.Repository.teestudianteRepository;
-import com.EduSteam.demo.Repository.tmasignaturaRepository;
 import com.EduSteam.demo.Repository.ttprogresoacademicoRepository;
 import com.EduSteam.demo.Service.ttprogresoacademicoService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,64 +12,42 @@ import java.util.List;
 public class ttprogresoacademicoImpl implements ttprogresoacademicoService {
 
     @Autowired
-    private ttprogresoacademicoRepository repository;
-
-    @Autowired
-    private teestudianteRepository estudianteRepository;
-
-    @Autowired
-    private tmasignaturaRepository asignaturaRepository;
-
+    private ttprogresoacademicoRepository progresoAcademicoRepository;
 
     @Override
-    public List<ttprogresoacademicoID> listarActivos() {
-        List<ttprogresoacademicoEntity>lista=repository.findByEstadoProgreso(true);
-        return lista.stream().map(progreso->{
-            ttprogresoacademicoID dto=new ttprogresoacademicoID();
-
-            dto.setIdProgreso(progreso.getIdProgreso());
-            dto.setIdEstudiante(progreso.getEstudiante().getIdestudiante());
-            dto.setIdAsignatura(progreso.getAsignatura().getIdasignatura());
-            dto.setCalificacion(progreso.getCalificacion());
-            dto.setNotasProgreso(progreso.getNotasProgreso());
-            dto.setEstadoProgreso(progreso.getEstadoProgreso());
-            return dto;
-        }).toList();
+    public List<ttprogresoacademicoEntity> listarActivos() {
+        return progresoAcademicoRepository.ListaProgresoAcademicoActivos();
     }
 
     @Override
-    public ttprogresoacademicoID registrar(ttprogresoacademicoDto dto) {
-        teestudianteEntity estudiante = estudianteRepository.findById(dto.getIdEstudiante()).orElse(null);
-        tmasignaturaEntity asignatura = asignaturaRepository.findById(dto.getIdAsignatura()).orElse(null);
+    public List<ttprogresoacademicoEntity> listarPorIdEstudiante(Long idEstudiante) {
+        return progresoAcademicoRepository.BuscarPorEstudiante(idEstudiante);
+    }
 
-        if (estudiante == null || asignatura == null) {
-            throw new RuntimeException("Estudiante o Asignatura no encontrados en la base de datos.");
-        }
+    @Override
+    public ttprogresoacademicoEntity buscarPorId(Long id) {
+        return progresoAcademicoRepository.BuscarPorId(id);
+    }
 
-        ttprogresoacademicoEntity progreso = new ttprogresoacademicoEntity();
-        progreso.setEstudiante(estudiante);
-        progreso.setAsignatura(asignatura);
-        progreso.setCalificacion(dto.getCalificacion());
-        progreso.setNotasProgreso(dto.getNotasProgreso());
+    @Override
+    public ttprogresoacademicoEntity registrar(ttprogresoacademicoEntity progreso) {
         progreso.setEstadoProgreso(true);
+        return progresoAcademicoRepository.save(progreso);
+    }
 
-        ttprogresoacademicoEntity guardado=repository.save(progreso);
-        ttprogresoacademicoID respuesta=new ttprogresoacademicoID();
-        respuesta.setIdProgreso(guardado.getIdProgreso());
-        respuesta.setIdEstudiante(guardado.getEstudiante().getIdestudiante());
-        respuesta.setIdAsignatura(guardado.getAsignatura().getIdasignatura());
-        respuesta.setCalificacion(guardado.getCalificacion());
-        respuesta.setNotasProgreso(guardado.getNotasProgreso());
-        respuesta.setEstadoProgreso(guardado.getEstadoProgreso());
-        return respuesta;
+    @Override
+    public ttprogresoacademicoEntity actualizar(Long id, ttprogresoacademicoEntity progreso) {
+        ttprogresoacademicoEntity progresoExistente = buscarPorId(id);
+        progresoExistente.setCalificacion(progreso.getCalificacion());
+        progresoExistente.setNotasProgreso(progreso.getNotasProgreso());
+        progresoExistente.setAsignatura(progreso.getAsignatura());
+        return progresoAcademicoRepository.save(progresoExistente);
     }
 
     @Override
     public void eliminarLogico(Long id) {
-        ttprogresoacademicoEntity progreso = repository.findById(id).orElse(null);
-        if (progreso != null) {
-            progreso.setEstadoProgreso(false);
-            repository.save(progreso);
-        }
+        ttprogresoacademicoEntity progreso = buscarPorId(id);
+        progreso.setEstadoProgreso(false);
+        progresoAcademicoRepository.save(progreso);
     }
 }

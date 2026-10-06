@@ -10,9 +10,6 @@ public interface tmrolService {
 
     List<tmrolEntity> listar();
     tmrolEntity guardar (tmrolEntity  tmrolentity);
-    tmrolEntity listarId( Integer id);
-    public void  delete ( Integer id);
-    public void update ( tmrolEntity  tmrolentity);
 
 
 }

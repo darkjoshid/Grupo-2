@@ -11,7 +11,7 @@ public class tmasignaturaEntity {
     @Column(name = "idasignatura")
     private Long idasignatura;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "idtutor", nullable = false)
     private tetutorEntity tutor;
 

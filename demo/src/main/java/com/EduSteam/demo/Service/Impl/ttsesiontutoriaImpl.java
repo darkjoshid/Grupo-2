@@ -1,17 +1,10 @@
 package com.EduSteam.demo.Service.Impl;
 
-import com.EduSteam.demo.Dto.ttsesiontutoriaDto;
-import com.EduSteam.demo.Entity.*;
-import com.EduSteam.demo.Repository.teestudianteRepository;
-import com.EduSteam.demo.Repository.tetutorRepository;
-import com.EduSteam.demo.Repository.tmasignaturaRepository;
+import com.EduSteam.demo.Entity.ttsesiontutoriaEntity;
 import com.EduSteam.demo.Repository.ttsesiontutoriaRepository;
 import com.EduSteam.demo.Service.ttsesiontutoriaService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,67 +12,49 @@ import java.util.List;
 public class ttsesiontutoriaImpl implements ttsesiontutoriaService {
 
     @Autowired
-    private ttsesiontutoriaRepository repository;
-
-    @Autowired
-    private tetutorRepository tutorRepository;
-
-    @Autowired
-    private teestudianteRepository estudianteRepository;
-
-    @Autowired
-    private tmasignaturaRepository asignaturaRepository;
-
+    private ttsesiontutoriaRepository sesionTutoriaRepository;
 
     @Override
-    public List<ttsesiontutoriaID> listarActivos() {
-        List<ttsesiontutoriaEntity>sesiones=repository.findByEstado(true);
-        return sesiones.stream().map(sesion ->{
-            ttsesiontutoriaID dto =new ttsesiontutoriaID();
-
-            dto.setIdSesion(sesion.getIdSesion());
-            dto.setIdTutor(sesion.getTutor().getIdtutor());
-            dto.setIdEstudiante(sesion.getEstudiante().getIdestudiante());
-            dto.setIdAsignatura(sesion.getAsignatura().getIdasignatura());
-            dto.setFechaSesion(sesion.getFechaSesion());
-            dto.setHoraInicio(sesion.getHoraInicio());
-            dto.setHoraFin(sesion.getHoraFin());
-            dto.setEstado(sesion.getEstado());
-            dto.setObservaciones(sesion.getObservaciones());
-
-            return dto;
-        }).toList();
+    public List<ttsesiontutoriaEntity> listarActivas() {
+        return sesionTutoriaRepository.ListaSesionesTutoriasActivas();
     }
 
     @Override
-    public ttsesiontutoriaEntity registrar(ttsesiontutoriaDto dto) {
-        tetutorEntity tutor = tutorRepository.findById(dto.getIdTutor()).orElse(null);
-        teestudianteEntity estudiante = estudianteRepository.findById(dto.getIdEstudiante()).orElse(null);
-        tmasignaturaEntity asignatura = asignaturaRepository.findById(dto.getIdAsignatura()).orElse(null);
+    public List<ttsesiontutoriaEntity> listarPorIdEstudiante(Long idEstudiante) {
+        return sesionTutoriaRepository.BuscarPorIdEstudiante(idEstudiante);
+    }
 
-        if (tutor == null || estudiante == null || asignatura == null) {
-            throw new RuntimeException("Tutor, Estudiante o Asignatura no encontrados en la base de datos.");
-        }
+    @Override
+    public List<ttsesiontutoriaEntity> listarPorIdTutor(Long idTutor) {
+        return sesionTutoriaRepository.BuscarPorIdTutor(idTutor);
+    }
 
-        ttsesiontutoriaEntity sesion = new ttsesiontutoriaEntity();
-        sesion.setTutor(tutor);
-        sesion.setEstudiante(estudiante);
-        sesion.setAsignatura(asignatura);
-        sesion.setFechaSesion(dto.getFechaSesion());
-        sesion.setHoraInicio(dto.getHoraInicio());
-        sesion.setHoraFin(dto.getHoraFin());
-        sesion.setObservaciones(dto.getObservaciones());
+    @Override
+    public ttsesiontutoriaEntity buscarPorId(Long id) {
+        return sesionTutoriaRepository.BuscarPorId(id);
+    }
+
+    @Override
+    public ttsesiontutoriaEntity registrar(ttsesiontutoriaEntity sesion) {
         sesion.setEstado(true);
+        return sesionTutoriaRepository.save(sesion);
+    }
 
-        return repository.save(sesion);
+    @Override
+    public ttsesiontutoriaEntity actualizar(Long id, ttsesiontutoriaEntity sesion) {
+        ttsesiontutoriaEntity sesionExistente = buscarPorId(id);
+        sesionExistente.setFechaSesion(sesion.getFechaSesion());
+        sesionExistente.setHoraInicio(sesion.getHoraInicio());
+        sesionExistente.setHoraFin(sesion.getHoraFin());
+        sesionExistente.setObservaciones(sesion.getObservaciones());
+        sesionExistente.setAsignatura(sesion.getAsignatura());
+        return sesionTutoriaRepository.save(sesionExistente);
     }
 
     @Override
     public void eliminarLogico(Long id) {
-        ttsesiontutoriaEntity sesion = repository.findById(id).orElse(null);
-        if (sesion != null) {
-            sesion.setEstado(false);
-            repository.save(sesion);
-        }
+        ttsesiontutoriaEntity sesion = buscarPorId(id);
+        sesion.setEstado(false);
+        sesionTutoriaRepository.save(sesion);
     }
 }
