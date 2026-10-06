@@ -9,7 +9,7 @@ import jakarta.persistence.ManyToOne;
 public class teusuarioDto {
 
 
-    private Integer idusuario;
+    private Long idusuario;
 
     private String nombreusuario;
 
@@ -30,20 +30,12 @@ public class teusuarioDto {
     )
     private rolID idrolRol;
 
-    public Integer getIdusuario() {
-        return idusuario;
+    public String getApellido() {
+        return apellido;
     }
 
-    public void setIdusuario(Integer idusuario) {
-        this.idusuario = idusuario;
-    }
-
-    public String getNombreusuario() {
-        return nombreusuario;
-    }
-
-    public void setNombreusuario(String nombreusuario) {
-        this.nombreusuario = nombreusuario;
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
     public String getContrasenia() {
@@ -52,22 +44,6 @@ public class teusuarioDto {
 
     public void setContrasenia(String contrasenia) {
         this.contrasenia = contrasenia;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
     }
 
     public String getCorreo() {
@@ -92,5 +68,29 @@ public class teusuarioDto {
 
     public void setIdrolRol(rolID idrolRol) {
         this.idrolRol = idrolRol;
+    }
+
+    public Long getIdusuario() {
+        return idusuario;
+    }
+
+    public void setIdusuario(Long idusuario) {
+        this.idusuario = idusuario;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getNombreusuario() {
+        return nombreusuario;
+    }
+
+    public void setNombreusuario(String nombreusuario) {
+        this.nombreusuario = nombreusuario;
     }
 }
