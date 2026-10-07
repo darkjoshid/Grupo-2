@@ -1,18 +1,17 @@
 package com.EduSteam.demo.Service;
 
-import com.EduSteam.demo.Entity.tetutorEntity;
+import com.EduSteam.demo.Dto.tetutorDto;
 
 import java.util.List;
 
 public interface tetutorService {
+    List<tetutorDto> listar();
 
-    List<tetutorEntity> listar();
+    tetutorDto obtenerPorId(Long id);
 
-    tetutorEntity listarId(Long idtutor);
+    tetutorDto guardar(tetutorDto dto);
 
-    tetutorEntity guardar(tetutorEntity tetutor);
+    tetutorDto actualizar(Long id, tetutorDto dto);
 
-    tetutorEntity actualizar(tetutorEntity tetutor);
-
-    void eliminar(Long idtutor);
+    void eliminar(Long id);
 }

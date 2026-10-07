@@ -1,53 +1,55 @@
 package com.EduSteam.demo.Controller;
 
-import com.EduSteam.demo.Entity.tetutorEntity;
+import com.EduSteam.demo.Dto.tetutorDto;
 import com.EduSteam.demo.Service.tetutorService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/tutores")
-@Tag(name = "Controlador de tutores", description = "Es el controlador que te permite registrar, listar, actualizar y eliminar los tutores")
+@Tag(name = "Controlador de tutores", description = "Permite registrar, listar, consultar, " +
+        "actualizar y dar de baja a los tutores")
 public class tetutorController {
+    private final tetutorService tutorService;
 
-    @Autowired
-    private tetutorService tutorService;
+    public tetutorController(tetutorService tutorService) {
+        this.tutorService = tutorService;
+    }
 
-    @GetMapping("/listar_tutor")
-    public List<tetutorEntity> listar_tutores() {
-
+    @GetMapping
+    @Operation(summary = "Listar todos los tutores")
+    public List<tetutorDto> listar() {
         return tutorService.listar();
     }
 
-    @GetMapping("/listar_tutor/{idtutor}")
-    public tetutorEntity listar_por_id(@PathVariable("idtutor") Long idtutor) {
-        tetutorEntity tutor = tutorService.listarId(idtutor);
-        if (tutor == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No existe el tutor con id: " + idtutor);
-        }
-        return tutor;
+    @GetMapping("/{id}")
+    @Operation(summary = "Obtener un tutor por su id")
+    public tetutorDto obtenerPorId(@PathVariable Long id) {
+        return tutorService.obtenerPorId(id);
     }
 
-    @PostMapping("/savetutor")
-    public tetutorEntity guardar_datos(@RequestBody tetutorEntity tetutor) {
-
-        return tutorService.guardar(tetutor);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Registrar un tutor", description = "Requiere el idusuario de un usuario existente que aún no sea tutor")
+    public tetutorDto guardar(@Valid @RequestBody tetutorDto dto) {
+        return tutorService.guardar(dto);
     }
 
-    @PutMapping("/actualizartutor")
-    public tetutorEntity actualizar_datos(@RequestBody tetutorEntity tetutor) {
-
-        return tutorService.actualizar(tetutor);
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar un tutor", description = "El idusuario enviado en el cuerpo se ignora: un tutor no cambia de usuario")
+    public tetutorDto actualizar(@PathVariable Long id, @Valid @RequestBody tetutorDto dto) {
+        return tutorService.actualizar(id, dto);
     }
 
-    @DeleteMapping("/eliminartutor/{idtutor}")
-    public void eliminar_tutor(@PathVariable("idtutor") Long idtutor) {
-
-        tutorService.eliminar(idtutor);
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Dar de baja a un tutor", description = "Eliminación lógica: el tutor queda con estadoTutor = false")
+    public void eliminar(@PathVariable Long id) {
+        tutorService.eliminar(id);
     }
 }

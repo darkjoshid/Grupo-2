@@ -1,18 +1,17 @@
 package com.EduSteam.demo.Service;
 
-import com.EduSteam.demo.Entity.tmasignaturaEntity;
+import com.EduSteam.demo.Dto.tmasignaturaDto;
 
 import java.util.List;
 
 public interface tmasignaturaService {
+    List<tmasignaturaDto> listar();
 
-    List<tmasignaturaEntity> listar();
+    tmasignaturaDto obtenerPorId(Long id);
 
-    tmasignaturaEntity listarId(Long idasignatura);
+    tmasignaturaDto guardar(tmasignaturaDto dto);
 
-    tmasignaturaEntity guardar(tmasignaturaEntity tmasignatura);
+    tmasignaturaDto actualizar(Long id, tmasignaturaDto dto);
 
-    tmasignaturaEntity actualizar(tmasignaturaEntity tmasignatura);
-
-    void eliminar(Long idasignatura);
+    void eliminar(Long id);
 }

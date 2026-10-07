@@ -40,7 +40,7 @@ public class ttcuentaImpl implements ttcuentaService {
                     );
             ttcuenta.setUsuario(usuario);
         }
-        boolean esEdicion=ttcuenta.getIdcuenta()!=null;
+        boolean esEdicion=ttcuenta.getIdcuenta()!=null && ttcuenta.getIdcuenta()>0;
         ttcuentaEntity cuantaGuardada=repository.save(ttcuenta);
         if(cuantaGuardada.getUsuario()!=null){
             Long idusuario=cuantaGuardada.getUsuario().getIdusuario();

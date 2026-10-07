@@ -1,12 +1,24 @@
 package com.EduSteam.demo.Dto;
 
-public class tmasignaturaDto {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 
+public class tmasignaturaDto {
     private Long idasignatura;
+
     private Long idtutor;
+
+    @NotBlank(message = "El nombre de la asignatura es obligatorio")
+    @Size(max = 100, message = "El nombre no puede superar los 100 caracteres")
     private String nombre;
+
+    @Size(max = 500, message = "La descripción no puede superar los 500 caracteres")
     private String descripcion;
+
+    @PositiveOrZero(message = "El nivel no puede ser negativo")
     private Integer nivel;
+
     private Boolean estadoAsignatura;
 
     public Long getIdasignatura() {
