@@ -57,7 +57,6 @@ public class tmasignaturaImpl implements tmasignaturaService{
     @Transactional
     public tmasignaturaDto actualizar(Long id, tmasignaturaDto dto) {
         tmasignaturaEntity asignatura = buscar(id);
-        // Si se envía un idtutor, la asignatura pasa a ese tutor
         if (dto.getIdtutor() != null) {
             asignatura.setTutor(buscarTutor(dto.getIdtutor()));
         }
@@ -89,7 +88,6 @@ public class tmasignaturaImpl implements tmasignaturaService{
         asignatura.setNombre(dto.getNombre());
         asignatura.setDescripcion(dto.getDescripcion());
         asignatura.setNivel(dto.getNivel());
-        // El estado no se modifica aquí: solo cambia con guardar (activa) o eliminar (baja lógica)
     }
 
     private tmasignaturaDto toDto(tmasignaturaEntity asignatura) {

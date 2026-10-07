@@ -71,7 +71,6 @@ public class tetutorImpl implements tetutorService {
     public tetutorDto actualizar(Long id, tetutorDto dto) {
         tetutorEntity tutor = buscar(id);
 
-        // Si se envía un idusuario distinto al actual, el tutor pasa a ese usuario
         Long idusuarioActual = tutor.getUsuario() != null ? tutor.getUsuario().getIdusuario() : null;
         if (dto.getIdusuario() != null && !dto.getIdusuario().equals(idusuarioActual)) {
             teusuarioEntity usuario = usuarioRepository.findById(dto.getIdusuario())
@@ -96,7 +95,6 @@ public class tetutorImpl implements tetutorService {
         tutor.setEstadoTutor(false);
         tutorRepository.save(tutor);
 
-        // Al dar de baja al tutor, también se dan de baja sus asignaturas activas
         for (tmasignaturaEntity asignatura : asignaturaRepository.listarActivasPorTutor(id)) {
             asignatura.setEstadoAsignatura(false);
             asignaturaRepository.save(asignatura);
@@ -113,7 +111,6 @@ public class tetutorImpl implements tetutorService {
         tutor.setBiografia(dto.getBiografia());
         tutor.setAnosExperiencia(dto.getAnosExperiencia());
         tutor.setCalificacion(dto.getCalificacion());
-        // El estado no se modifica aquí: solo cambia con guardar (activo) o eliminar (baja lógica)
     }
 
     private tetutorDto toDto(tetutorEntity tutor) {
