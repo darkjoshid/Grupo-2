@@ -48,8 +48,8 @@ public class ttprogresoacademicoImpl implements ttprogresoacademicoService {
 
     @Override
     public ttprogresoacademicoID registrar(ttprogresoacademicoDto dto) {
-        teestudianteEntity estudiante = estudianteRepository.findById(dto.getIdEstudiante()).orElse(null);
-        tmasignaturaEntity asignatura = asignaturaRepository.findById(dto.getIdAsignatura()).orElse(null);
+        teestudianteEntity estudiante = estudianteRepository.findById(dto.getIdestudiante()).orElse(null);
+        tmasignaturaEntity asignatura = asignaturaRepository.findById(dto.getIdsesiontutoria()).orElse(null);
 
         if (estudiante == null || asignatura == null) {
             throw new RuntimeException("Estudiante o Asignatura no encontrados en la base de datos.");
@@ -59,7 +59,7 @@ public class ttprogresoacademicoImpl implements ttprogresoacademicoService {
         progreso.setEstudiante(estudiante);
         progreso.setAsignatura(asignatura);
         progreso.setCalificacion(dto.getCalificacion());
-        progreso.setNotasProgreso(dto.getNotasProgreso());
+        progreso.setNotasProgreso(dto.getNotasprogreso());
         progreso.setEstadoProgreso(true);
 
         ttprogresoacademicoEntity guardado=repository.save(progreso);

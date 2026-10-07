@@ -2,21 +2,41 @@ package com.EduSteam.demo.Dto;
 
 public class ttprogresoacademicoDto {
 
-    private Long idEstudiante;
-    private Long idAsignatura;
+    private Long idestudiante;
+    private Long idsesiontutoria;
     private Integer calificacion;
-    private String notasProgreso;
+    private String notasprogreso;
 
-    // Getters y Setters
-    public Long getIdEstudiante() { return idEstudiante; }
-    public void setIdEstudiante(Long idEstudiante) { this.idEstudiante = idEstudiante; }
+    public Long getIdestudiante() {
+        return idestudiante;
+    }
 
-    public Long getIdAsignatura() { return idAsignatura; }
-    public void setIdAsignatura(Long idAsignatura) { this.idAsignatura = idAsignatura; }
+    public void setIdestudiante(Long idestudiante) {
+        this.idestudiante = idestudiante;
+    }
 
-    public Integer getCalificacion() { return calificacion; }
-    public void setCalificacion(Integer calificacion) { this.calificacion = calificacion; }
+    public Long getIdsesiontutoria() {
+        return idsesiontutoria;
+    }
 
-    public String getNotasProgreso() { return notasProgreso; }
-    public void setNotasProgreso(String notasProgreso) { this.notasProgreso = notasProgreso; }
+    public void setIdsesiontutoria(Long idsesiontutoria) {
+        this.idsesiontutoria = idsesiontutoria;
+    }
+
+    public Integer getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(Integer calificacion) {
+        this.calificacion = calificacion;
+    }
+
+    public String getNotasprogreso() {
+        return notasprogreso;
+    }
+
+    public void setNotasprogreso(String notasprogreso) {
+        this.notasprogreso = notasprogreso;
+    }
 }
+

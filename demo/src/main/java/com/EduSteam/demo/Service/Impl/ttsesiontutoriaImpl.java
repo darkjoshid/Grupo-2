@@ -53,9 +53,9 @@ public class ttsesiontutoriaImpl implements ttsesiontutoriaService {
 
     @Override
     public ttsesiontutoriaEntity registrar(ttsesiontutoriaDto dto) {
-        tetutorEntity tutor = tutorRepository.findById(dto.getIdTutor()).orElse(null);
-        teestudianteEntity estudiante = estudianteRepository.findById(dto.getIdEstudiante()).orElse(null);
-        tmasignaturaEntity asignatura = asignaturaRepository.findById(dto.getIdAsignatura()).orElse(null);
+        tetutorEntity tutor = tutorRepository.findById(dto.getIdtutor()).orElse(null);
+        teestudianteEntity estudiante = estudianteRepository.findById(dto.getIdestudiante()).orElse(null);
+        tmasignaturaEntity asignatura = asignaturaRepository.findById(dto.getIdasignatura()).orElse(null);
 
         if (tutor == null || estudiante == null || asignatura == null) {
             throw new RuntimeException("Tutor, Estudiante o Asignatura no encontrados en la base de datos.");
@@ -65,9 +65,9 @@ public class ttsesiontutoriaImpl implements ttsesiontutoriaService {
         sesion.setTutor(tutor);
         sesion.setEstudiante(estudiante);
         sesion.setAsignatura(asignatura);
-        sesion.setFechaSesion(dto.getFechaSesion());
-        sesion.setHoraInicio(dto.getHoraInicio());
-        sesion.setHoraFin(dto.getHoraFin());
+        sesion.setFechaSesion(dto.getFechasesion());
+        sesion.setHoraInicio(dto.getHorainicio().toLocalTime());
+        sesion.setHoraFin(dto.getHorafin().toLocalTime());
         sesion.setObservaciones(dto.getObservaciones());
         sesion.setEstado(true);
 
